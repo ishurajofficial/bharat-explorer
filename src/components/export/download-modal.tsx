@@ -65,8 +65,10 @@ export default function DownloadModal({ isOpen, onClose, mapElementId = 'india-m
 
       // We need to measure the actual element to get aspect ratio correct in PDF
       const rect = element.getBoundingClientRect();
+      const orientation = rect.width >= rect.height ? 'landscape' : 'portrait';
+      
       const pdf = new jsPDF({
-        orientation: 'landscape',
+        orientation: orientation,
         unit: 'px',
         format: [rect.width, rect.height]
       });
