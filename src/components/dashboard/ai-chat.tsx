@@ -153,7 +153,7 @@ export default function AIChatbot() {
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-        className="fixed bottom-24 md:bottom-6 right-4 md:right-6 w-[calc(100vw-32px)] md:w-[350px] lg:w-[400px] h-[600px] max-h-[75vh] md:max-h-[85vh] z-50 flex flex-col shadow-2xl glass rounded-2xl border border-border/50 overflow-hidden"
+        className="fixed bottom-24 md:bottom-6 right-4 md:right-6 w-[calc(100vw-32px)] md:w-[350px] lg:w-[400px] h-[600px] max-h-[75vh] md:max-h-[85vh] z-50 flex flex-col shadow-2xl bg-background rounded-2xl border border-border/50 overflow-hidden"
       >
         {/* Header */}
         <div className="p-4 border-b border-border/50 bg-background/50 flex items-center justify-between">
