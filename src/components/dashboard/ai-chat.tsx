@@ -183,7 +183,7 @@ export default function AIChatbot() {
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-2 mt-4 max-w-md">
-              <span className="text-xs bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">"Best time to visit Kerala?"</span>
+              <span className="text-xs bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">"Best time to visit Meghalaya?"</span>
               <span className="text-xs bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">"Plan a 3-day trip to Jaipur"</span>
               <span className="text-xs bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">"What is the capital of Sikkim?"</span>
             </div>
