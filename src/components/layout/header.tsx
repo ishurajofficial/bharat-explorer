@@ -69,11 +69,21 @@ export default function Header({ onSearchSelect, onDownloadClick }: HeaderProps)
         <Button
           variant="outline"
           size="icon"
-          className="glass border-border/50 rounded-full"
+          className="glass border-border/50 rounded-full w-10 h-10"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
         >
           {theme === 'dark' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
           <span className="sr-only">Toggle theme</span>
+        </Button>
+
+        <Button
+          variant="outline"
+          size="icon"
+          className="glass border-border/50 rounded-full w-10 h-10 text-red-500 hover:bg-red-500/10 hover:border-red-500/20"
+          onClick={() => logout()}
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="sr-only">Logout</span>
         </Button>
       </div>
     </header>

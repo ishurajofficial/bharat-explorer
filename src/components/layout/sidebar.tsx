@@ -171,7 +171,7 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onCollaps
                   </div>
                   <button 
                     onClick={() => logout()}
-                    className="p-1.5 text-muted-foreground hover:text-red-400 hover:bg-red-400/10 rounded-md transition-colors"
+                    className="p-1.5 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-md transition-colors"
                     title="Log out"
                   >
                     <LogOut className="w-4 h-4" />
@@ -189,7 +189,7 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onCollaps
                   </div>
                   <button 
                     onClick={() => logout()}
-                    className="p-1.5 text-muted-foreground hover:text-red-400 hover:bg-red-400/10 rounded-md transition-colors"
+                    className="p-1.5 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-md transition-colors"
                     title="Log out"
                   >
                     <LogOut className="w-4 h-4" />
