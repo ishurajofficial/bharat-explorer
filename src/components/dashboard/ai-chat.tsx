@@ -39,6 +39,7 @@ export default function AIChatbot() {
   const [recognition, setRecognition] = useState<any>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Initialize Speech Recognition
   useEffect(() => {
@@ -135,18 +136,40 @@ export default function AIChatbot() {
     }
   };
 
+  if (!isOpen) {
+    return (
+      <Button 
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full gradient-saffron shadow-xl z-50 p-0 flex items-center justify-center hover:shadow-2xl transition-all hover:scale-105 border border-white/20"
+      >
+        <Bot className="w-6 h-6 text-white" />
+      </Button>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] md:h-[calc(100vh-100px)] glass rounded-2xl border border-border/50 overflow-hidden relative">
-      {/* Header */}
-      <div className="p-4 border-b border-border/50 bg-background/50 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full gradient-saffron flex items-center justify-center">
-          <Bot className="w-5 h-5 text-white" />
+    <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.95 }}
+        className="fixed bottom-6 right-6 w-[350px] sm:w-[400px] h-[600px] max-h-[85vh] z-50 flex flex-col shadow-2xl glass rounded-2xl border border-border/50 overflow-hidden"
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-border/50 bg-background/50 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full gradient-saffron flex items-center justify-center shadow-sm">
+              <Bot className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="font-bold text-lg text-foreground">Bharat AI Guide</h2>
+              <p className="text-xs text-muted-foreground">Ask anything about traveling in India</p>
+            </div>
+          </div>
+          <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="rounded-full hover:bg-muted/50">
+            <X className="w-5 h-5 text-muted-foreground" />
+          </Button>
         </div>
-        <div>
-          <h2 className="font-bold text-lg text-foreground">Bharat AI Guide</h2>
-          <p className="text-xs text-muted-foreground">Ask anything about traveling in India</p>
-        </div>
-      </div>
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -276,6 +299,7 @@ export default function AIChatbot() {
           </Button>
         </form>
       </div>
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

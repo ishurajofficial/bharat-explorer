@@ -38,7 +38,6 @@ const navItems: { id: SidebarView; label: string; icon: React.ElementType; badge
   { id: 'statistics', label: 'Statistics', icon: BarChart3 },
   { id: 'diary', label: 'Travel Diary', icon: BookOpen },
   { id: 'achievements', label: 'Achievements', icon: Trophy },
-  { id: 'ai-guide', label: 'AI Guide', icon: Sparkles },
   { id: 'settings', label: 'Settings', icon: Settings },
   { id: 'downloads', label: 'Downloads', icon: Download },
   { id: 'about', label: 'About India', icon: Info },
