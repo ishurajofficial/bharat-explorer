@@ -10,15 +10,12 @@ export async function POST(req: Request) {
 
     const result = streamText({
       model: google('gemini-2.5-flash'),
-      system: `You are Bharat Explorer AI, an expert travel guide for India. 
-      You help users plan trips, learn about Indian states, culture, history, and geography.
-      Be enthusiastic, culturally aware, and provide accurate, well-structured information. 
-      When a user asks about a specific state, mention its capital, key attractions, and best time to visit if relevant.
-      Keep responses concise and engaging.`,
+      system: `You are Bharat Explorer AI, an enthusiastic, culturally aware expert guide for Indian geography and travel. You help users plan trips, identify locations from images, give facts about states and monuments, and suggest the best times to visit various regions of India.
+Keep your responses concise, well-formatted, and visually appealing using markdown. If asked something unrelated to travel, geography, or India, gently steer the conversation back to exploring India.`,
       messages,
     });
 
-    return result.toTextStreamResponse();
+    return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error('AI Chat Error:', error);
     return new Response(JSON.stringify({ error: 'Failed to generate response' }), {
