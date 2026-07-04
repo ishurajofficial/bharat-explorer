@@ -224,20 +224,24 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onCollaps
       </motion.aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass border-t border-border/50 px-2 py-1 safe-area-bottom">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass border-t border-border/50 px-1 py-1 safe-area-bottom">
         <div className="flex items-center justify-around">
           {navItems.slice(0, 5).map((item) => {
             const isActive = activeView === item.id;
+            let mobileLabel = item.label;
+            if (mobileLabel === 'Travel Diary') mobileLabel = 'Diary';
+            if (mobileLabel === 'Achievements') mobileLabel = 'Trophies';
+
             return (
               <button
                 key={item.id}
                 onClick={() => onViewChange(item.id)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl text-[10px] font-medium transition-colors ${
+                className={`flex flex-col items-center gap-1 px-1 py-2 rounded-xl text-[9px] sm:text-[10px] font-medium transition-colors ${
                   isActive ? 'text-primary' : 'text-muted-foreground'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
-                <span>{item.label.slice(0, 8)}</span>
+                <span className="whitespace-nowrap">{mobileLabel}</span>
                 {isActive && (
                   <motion.div
                     layoutId="mobile-active"
