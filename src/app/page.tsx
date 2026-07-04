@@ -33,10 +33,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setIsMounted(true);
-    if (!useTravelStore.getState().user) {
+    if (!user) {
       router.push('/login');
     }
-  }, [router]);
+  }, [router, user]);
 
   useEffect(() => {
     // Apply theme
