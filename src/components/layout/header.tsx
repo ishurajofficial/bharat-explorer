@@ -1,6 +1,6 @@
 'use client';
 
-import { Moon, Sun, Monitor, Download, Map } from 'lucide-react';
+import { Moon, Sun, Monitor, Download, Map, LogOut } from 'lucide-react';
 import { useTravelStore } from '@/store/travel-store';
 import SearchComponent from '@/components/dashboard/search';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,11 @@ interface HeaderProps {
 }
 
 export default function Header({ onSearchSelect, onDownloadClick }: HeaderProps) {
-  const { theme, setTheme } = useTravelStore();
+  const { theme, setTheme, logout } = useTravelStore();
 
   return (
     <header className="sticky top-0 z-30 w-full glass border-b border-border/50 px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
-      {/* Mobile Top Row: Logo & Theme */}
+      {/* Mobile Top Row: Logo & Theme/Logout */}
       <div className="flex items-center justify-between w-full md:w-auto md:hidden">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg gradient-saffron flex items-center justify-center flex-shrink-0">
@@ -26,15 +26,27 @@ export default function Header({ onSearchSelect, onDownloadClick }: HeaderProps)
           </h1>
         </div>
         
-        <Button
-          variant="outline"
-          size="icon"
-          className="glass border-border/50 rounded-full w-8 h-8"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        >
-          {theme === 'dark' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-          <span className="sr-only">Toggle theme</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            className="glass border-border/50 rounded-full w-8 h-8"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
+            {theme === 'dark' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+          
+          <Button
+            variant="outline"
+            size="icon"
+            className="glass border-border/50 rounded-full w-8 h-8 text-red-500 hover:bg-red-500/10 hover:border-red-500/20"
+            onClick={() => logout()}
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="sr-only">Logout</span>
+          </Button>
+        </div>
       </div>
 
       {/* Search Bar - Full width on mobile, max-w on desktop */}
