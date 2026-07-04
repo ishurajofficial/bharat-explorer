@@ -149,7 +149,7 @@ function serialize(state: TravelStore): SerializedState {
   };
 }
 
-function deserialize(raw: SerializedState): Omit<TravelStore, 'login' | 'logout' | 'toggleVisited' | 'toggleWishlist' | 'setTravelNote' | 'setMapMode' | 'setMapFilter' | 'setMapColor' | 'setTheme' | 'setShowLabels' | 'setShowBorders' | 'setAnimationsEnabled' | 'resetAll' | 'exportData' | 'importData'> {
+function deserialize(raw: SerializedState): Omit<TravelStore, 'login' | 'logout' | 'syncFromCloud' | 'toggleVisited' | 'toggleWishlist' | 'setTravelNote' | 'setMapMode' | 'setMapFilter' | 'setMapColor' | 'setTheme' | 'setShowLabels' | 'setShowBorders' | 'setAnimationsEnabled' | 'resetAll' | 'exportData' | 'importData'> {
   const mapColors = { ...DEFAULT_MAP_COLORS, ...(raw.mapColors ?? {}) };
   
   // Patch old dark colors to the new lighter ones for users with existing saves

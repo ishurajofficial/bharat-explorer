@@ -14,6 +14,7 @@ import MotivationEngine from '@/components/dashboard/motivation';
 import Timeline from '@/components/dashboard/timeline';
 import StateDetailDrawer from '@/components/map/state-detail-drawer';
 import DownloadModal from '@/components/export/download-modal';
+import SettingsPanel from '@/components/dashboard/settings-panel';
 import { motion, AnimatePresence } from 'motion/react';
 import { RefreshCw, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
