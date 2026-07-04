@@ -5,6 +5,7 @@ import { Download, FileImage, FileType2, FileCode2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useTravelStore } from '@/store/travel-store';
+import { toast } from 'react-hot-toast';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function DownloadModal({ isOpen, onClose, mapElementId = 'india-m
   const { exportData } = useTravelStore();
 
   const handleDownloadImage = async (type: 'png' | 'jpeg') => {
+    const loadingToast = toast.loading(`Generating ${type.toUpperCase()}...`);
     try {
       setIsExporting(true);
       const element = document.getElementById(mapElementId);
@@ -24,9 +26,9 @@ export default function DownloadModal({ isOpen, onClose, mapElementId = 'india-m
 
       const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(element, {
-        backgroundColor: 'var(--ocean)',
+        backgroundColor: null, // Let it use the element's actual background
         scale: 2, // High resolution
-        logging: false,
+        logging: true,
         useCORS: true,
       });
 
@@ -35,14 +37,17 @@ export default function DownloadModal({ isOpen, onClose, mapElementId = 'india-m
       a.href = url;
       a.download = `bharat-explorer-map.${type}`;
       a.click();
-    } catch (err) {
+      toast.success('Download complete!', { id: loadingToast });
+    } catch (err: any) {
       console.error('Export failed:', err);
+      toast.error(`Export failed: ${err.message || 'Unknown error'}`, { id: loadingToast });
     } finally {
       setIsExporting(false);
     }
   };
 
   const handleDownloadPDF = async () => {
+    const loadingToast = toast.loading('Generating PDF...');
     try {
       setIsExporting(true);
       const element = document.getElementById(mapElementId);
@@ -52,9 +57,10 @@ export default function DownloadModal({ isOpen, onClose, mapElementId = 'india-m
       const { jsPDF } = await import('jspdf');
       
       const canvas = await html2canvas(element, {
-        backgroundColor: 'var(--ocean)',
+        backgroundColor: null,
         scale: 2,
-        logging: false,
+        logging: true,
+        useCORS: true,
       });
 
       const imgData = canvas.toDataURL('image/jpeg', 1.0);
@@ -66,8 +72,10 @@ export default function DownloadModal({ isOpen, onClose, mapElementId = 'india-m
 
       pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
       pdf.save('bharat-explorer-map.pdf');
-    } catch (err) {
+      toast.success('PDF Download complete!', { id: loadingToast });
+    } catch (err: any) {
       console.error('PDF Export failed:', err);
+      toast.error(`Export failed: ${err.message || 'Unknown error'}`, { id: loadingToast });
     } finally {
       setIsExporting(false);
     }
