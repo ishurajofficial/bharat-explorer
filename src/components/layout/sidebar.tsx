@@ -200,13 +200,27 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onCollaps
           </div>
         )}
 
-        {/* Collapse Toggle */}
-        <button
-          onClick={() => onCollapse(!collapsed)}
-          className="p-3 border-t border-border/30 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
-        >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </button>
+        {/* Footer info */}
+        <div className="p-3 border-t border-border/30 text-center">
+          <AnimatePresence>
+            {!collapsed && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-[10px] text-muted-foreground/60 mb-2"
+              >
+                Developed by Ishu Raj
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <button
+            onClick={() => onCollapse(!collapsed)}
+            className="w-full py-2 text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center rounded-lg hover:bg-muted/50"
+          >
+            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </button>
+        </div>
       </motion.aside>
 
       {/* Mobile Bottom Navigation */}
