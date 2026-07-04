@@ -27,11 +27,32 @@ export default function IndiaMap({ className, onStateClick, onStateHover }: Indi
     mapFilter,
     mapColors,
     showBorders,
+    showLabels,
     animationsEnabled
   } = useTravelStore();
 
   const [hoveredState, setHoveredState] = useState<string | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [labelCoords, setLabelCoords] = useState<Record<string, {x: number, y: number}>>({});
+
+  useEffect(() => {
+    // Calculate centroids for labels after initial render
+    const timer = setTimeout(() => {
+      const coords: Record<string, {x: number, y: number}> = {};
+      INDIA_MAP_DATA.locations.forEach(location => {
+        const el = document.getElementById(location.id) as any;
+        if (el && el.getBBox) {
+          const bbox = el.getBBox();
+          coords[location.id] = {
+            x: bbox.x + bbox.width / 2,
+            y: bbox.y + bbox.height / 2
+          };
+        }
+      });
+      setLabelCoords(coords);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Zoom and Pan state
   const [scale, setScale] = useState(1);
@@ -212,6 +233,26 @@ export default function IndiaMap({ className, onStateClick, onStateHover }: Indi
                 onMouseLeave={onPathMouseLeave}
                 onClick={(e) => handleStateClick(location.id, e as unknown as React.MouseEvent)}
               />
+            );
+          })}
+          
+          {/* Render Labels */}
+          {showLabels && INDIA_MAP_DATA.locations.map((location) => {
+            const coords = labelCoords[location.id];
+            if (!coords) return null;
+            const region = getRegionData(location.id);
+            if (!region) return null;
+            return (
+              <text
+                key={`label-${location.id}`}
+                x={coords.x}
+                y={coords.y}
+                textAnchor="middle"
+                alignmentBaseline="middle"
+                className="text-[12px] fill-foreground pointer-events-none select-none font-bold drop-shadow-sm"
+              >
+                {region.abbreviation}
+              </text>
             );
           })}
         </svg>
