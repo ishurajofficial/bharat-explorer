@@ -249,9 +249,9 @@ export default function IndiaMap({ className, onStateClick, onStateHover }: Indi
                 y={coords.y}
                 textAnchor="middle"
                 alignmentBaseline="middle"
-                className="text-[12px] fill-foreground pointer-events-none select-none font-bold drop-shadow-sm"
+                className="text-[6px] fill-foreground pointer-events-none select-none font-bold drop-shadow-sm"
               >
-                {region.abbreviation}
+                {region.name}
               </text>
             );
           })}
