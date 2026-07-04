@@ -96,39 +96,41 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Main Map Area */}
                   <div className="lg:col-span-2 glass rounded-2xl border border-border/50 p-2 flex flex-col relative min-h-[500px]" id="india-map-capture">
-                    <div className="absolute top-4 left-4 z-10 glass px-4 py-3 rounded-xl border border-border/50 flex flex-col gap-3">
+                    <div className="relative z-10 glass px-4 py-4 mx-4 mt-4 mb-2 rounded-xl border border-border/50 flex flex-col xl:flex-row xl:items-center justify-between gap-4 shadow-sm">
                       <div>
                         <h2 className="font-bold text-lg text-foreground">Interactive Map</h2>
                         <p className="text-xs text-muted-foreground">Click on regions to mark them</p>
                       </div>
                       
-                      {/* Map Mode Toggle */}
-                      <div className="flex bg-muted/50 p-1 rounded-lg border border-border/50">
-                        <button
-                          onClick={() => useTravelStore.getState().setMapMode('visited')}
-                          className={`flex-1 text-xs font-medium px-3 py-1.5 rounded-md transition-colors ${mapMode === 'visited' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-                        >
-                          Visited
-                        </button>
-                        <button
-                          onClick={() => useTravelStore.getState().setMapMode('wishlist')}
-                          className={`flex-1 text-xs font-medium px-3 py-1.5 rounded-md transition-colors ${mapMode === 'wishlist' ? 'bg-background shadow text-purple-400' : 'text-muted-foreground hover:text-foreground'}`}
-                        >
-                          Wishlist
-                        </button>
-                      </div>
-
-                      {/* Map Filter */}
-                      <div className="flex bg-muted/50 p-1 rounded-lg border border-border/50 flex-wrap gap-1">
-                        {(['all', 'coastal', 'mountain', 'northeast'] as const).map(filter => (
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        {/* Map Mode Toggle */}
+                        <div className="flex bg-background/50 p-1 rounded-lg border border-border/50">
                           <button
-                            key={filter}
-                            onClick={() => useTravelStore.getState().setMapFilter(filter)}
-                            className={`flex-1 text-[10px] font-medium px-2 py-1 rounded-md transition-colors capitalize ${mapFilter === filter ? 'bg-background shadow text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                            onClick={() => useTravelStore.getState().setMapMode('visited')}
+                            className={`flex-1 text-xs font-medium px-4 py-1.5 rounded-md transition-colors ${mapMode === 'visited' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                           >
-                            {filter}
+                            Visited
                           </button>
-                        ))}
+                          <button
+                            onClick={() => useTravelStore.getState().setMapMode('wishlist')}
+                            className={`flex-1 text-xs font-medium px-4 py-1.5 rounded-md transition-colors ${mapMode === 'wishlist' ? 'bg-background shadow text-purple-400' : 'text-muted-foreground hover:text-foreground'}`}
+                          >
+                            Wishlist
+                          </button>
+                        </div>
+
+                        {/* Map Filter */}
+                        <div className="flex bg-background/50 p-1 rounded-lg border border-border/50 flex-wrap gap-1">
+                          {(['all', 'coastal', 'mountain', 'northeast'] as const).map(filter => (
+                            <button
+                              key={filter}
+                              onClick={() => useTravelStore.getState().setMapFilter(filter)}
+                              className={`flex-1 text-[10px] font-medium px-3 py-1.5 rounded-md transition-colors capitalize ${mapFilter === filter ? 'bg-background shadow text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                            >
+                              {filter}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     
