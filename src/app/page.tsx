@@ -16,8 +16,9 @@ import StateDetailDrawer from '@/components/map/state-detail-drawer';
 import DownloadModal from '@/components/export/download-modal';
 import SettingsPanel from '@/components/dashboard/settings-panel';
 import AIChatbot from '@/components/dashboard/ai-chat';
+import AboutIndia from '@/components/dashboard/about-india';
 import { motion, AnimatePresence } from 'motion/react';
-import { RefreshCw, Palette } from 'lucide-react';
+import { RefreshCw, Palette, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
@@ -217,24 +218,34 @@ export default function DashboardPage() {
               </motion.div>
             )}
 
-
-
             {activeView === 'downloads' && (
-              <motion.div 
+              <motion.div
                 key="downloads"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
+                className="h-full"
               >
-                <h2 className="text-3xl font-bold mb-6">Downloads & Export</h2>
-                <div className="max-w-2xl">
-                  <p className="text-muted-foreground mb-6">
-                    Click the export button below to download your map as an image, PDF, or backup your JSON data.
-                  </p>
-                  <Button onClick={() => setIsDownloadModalOpen(true)} className="gradient-saffron text-white border-0">
+                <div className="glass p-8 rounded-2xl border border-border/50 text-center">
+                  <Download className="w-12 h-12 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-bold mb-2">Export Your Map</h2>
+                  <p className="text-muted-foreground mb-6">Download your personalized map or backup your data.</p>
+                  <Button onClick={() => setIsDownloadModalOpen(true)}>
                     Open Export Menu
                   </Button>
                 </div>
+              </motion.div>
+            )}
+
+            {activeView === 'about' && (
+              <motion.div
+                key="about"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="h-full"
+              >
+                <AboutIndia />
               </motion.div>
             )}
           </AnimatePresence>
