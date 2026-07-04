@@ -31,7 +31,7 @@ export default function LoginPage() {
       const user = result.user;
       
       // Update local state, this will later be synced to Firestore!
-      login(user.displayName || 'Explorer', '🌍');
+      login(user.displayName || 'Explorer', '🌍', user.uid, user.email, user.photoURL);
       
       router.push('/');
     } catch (error: any) {

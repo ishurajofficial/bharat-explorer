@@ -15,7 +15,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // User logged in
-        login(firebaseUser.displayName || 'Explorer', '🌍', firebaseUser.uid);
+        login(firebaseUser.displayName || 'Explorer', '🌍', firebaseUser.uid, firebaseUser.email, firebaseUser.photoURL);
         
         // Fetch existing data from Firestore
         const docRef = doc(db, 'users', firebaseUser.uid);

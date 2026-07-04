@@ -33,6 +33,8 @@ export interface UserProfile {
   name: string;
   avatar: string; // emoji or identifier
   uid?: string;
+  email?: string | null;
+  photoURL?: string | null;
 }
 
 export interface TravelStore {
@@ -54,7 +56,7 @@ export interface TravelStore {
   animationsEnabled: boolean;
 
   // User Actions
-  login: (name: string, avatar: string, uid?: string) => void;
+  login: (name: string, avatar: string, uid?: string, email?: string | null, photoURL?: string | null) => void;
   logout: () => void;
   syncFromCloud: (data: any) => void;
 
@@ -213,7 +215,7 @@ export const useTravelStore = create<TravelStore>()(
       ...DEFAULT_STATE,
 
       // ---- user actions ----
-      login: (name, avatar, uid) => set({ user: { name, avatar, uid } }),
+      login: (name, avatar, uid, email, photoURL) => set({ user: { name, avatar, uid, email, photoURL } }),
       logout: () => set({ user: null }),
       syncFromCloud: (data) => set((state) => ({
         visitedStates: new Set(data.visitedStates || []),

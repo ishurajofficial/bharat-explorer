@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { Moon, Sun, Download, Map, LogOut, User as UserIcon, Settings as SettingsIcon } from 'lucide-react';
 import { useTravelStore } from '@/store/travel-store';
 import SearchComponent from '@/components/dashboard/search';
@@ -18,13 +20,17 @@ export default function Header({ onSearchSelect, onDownloadClick }: HeaderProps)
     if (!user) return null;
     
     // Generate a dummy email based on name if not provided
-    const email = `${user.name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user'}@example.com`;
+    const email = user.email || `${user.name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user'}@example.com`;
     
     return (
       <Popover>
         <PopoverTrigger className="flex items-center gap-1.5 md:gap-2 hover:bg-muted/50 p-1 pr-2 md:pr-3 rounded-full transition-colors border border-border/50 bg-background/50 h-8 md:h-10 ml-1 outline-hidden">
-          <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-background border border-border/50 flex items-center justify-center text-xs md:text-sm flex-shrink-0">
-            {user.avatar}
+          <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-background border border-border/50 flex items-center justify-center text-xs md:text-sm flex-shrink-0 overflow-hidden">
+            {user.photoURL ? (
+              <img src={user.photoURL} alt={user.name} className="w-full h-full object-cover" />
+            ) : (
+              user.avatar
+            )}
           </div>
           <span className="text-[10px] md:text-sm font-semibold max-w-[60px] md:max-w-[120px] truncate">{user.name}</span>
         </PopoverTrigger>
@@ -35,14 +41,20 @@ export default function Header({ onSearchSelect, onDownloadClick }: HeaderProps)
           </div>
           
           <div className="flex flex-col gap-1">
-            <Button variant="ghost" className="w-full justify-start text-sm h-8 px-2">
+            <Link 
+              href="/settings"
+              className="flex items-center w-full justify-start text-sm h-8 px-2 rounded-lg hover:bg-muted hover:text-foreground dark:hover:bg-muted/50"
+            >
               <UserIcon className="w-4 h-4 mr-2" />
               Edit Profile
-            </Button>
-            <Button variant="ghost" className="w-full justify-start text-sm h-8 px-2">
+            </Link>
+            <Link 
+              href="/settings"
+              className="flex items-center w-full justify-start text-sm h-8 px-2 rounded-lg hover:bg-muted hover:text-foreground dark:hover:bg-muted/50"
+            >
               <SettingsIcon className="w-4 h-4 mr-2" />
               Account Settings
-            </Button>
+            </Link>
             <Button 
               variant="ghost" 
               className="w-full justify-start text-sm h-8 px-2 text-red-500 hover:text-red-600 hover:bg-red-500/10 mt-1" 
