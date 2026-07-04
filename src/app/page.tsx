@@ -1,65 +1,252 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+import { useTravelStore } from '@/store/travel-store';
+import { useRouter } from 'next/navigation';
+import Sidebar, { SidebarView } from '@/components/layout/sidebar';
+import Header from '@/components/layout/header';
+import IndiaMap from '@/components/map/india-map';
+import StatsPanel from '@/components/dashboard/stats-panel';
+import AnalyticsCharts from '@/components/dashboard/analytics-charts';
+import ProgressRing from '@/components/dashboard/progress-ring';
+import Achievements from '@/components/dashboard/achievements';
+import MotivationEngine from '@/components/dashboard/motivation';
+import Timeline from '@/components/dashboard/timeline';
+import StateDetailDrawer from '@/components/map/state-detail-drawer';
+import DownloadModal from '@/components/export/download-modal';
+import { motion, AnimatePresence } from 'motion/react';
+import { RefreshCw, Palette } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
+  const [activeView, setActiveView] = useState<SidebarView>('dashboard');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  
+  const [selectedStateId, setSelectedStateId] = useState<string | null>(null);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+
+  const { theme, resetAll, mapMode, mapFilter, user } = useTravelStore();
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (!useTravelStore.getState().user) {
+      router.push('/login');
+    }
+  }, [router]);
+
+  useEffect(() => {
+    // Apply theme
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      // System theme
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  }, [theme]);
+
+  if (!isMounted || !user) return null; // Avoid hydration mismatch and flash of content
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="flex min-h-screen bg-background relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div className="gradient-blob bg-saffron w-[500px] h-[500px] -top-[250px] -left-[100px]" style={{ animationDelay: '0s' }} />
+        <div className="gradient-blob bg-india-green w-[600px] h-[600px] -bottom-[300px] -right-[100px]" style={{ animationDelay: '-4s' }} />
+        <div className="gradient-blob bg-navy w-[400px] h-[400px] top-[40%] left-[20%]" style={{ animationDelay: '-2s' }} />
+      </div>
+
+      <Sidebar 
+        activeView={activeView} 
+        onViewChange={setActiveView} 
+        collapsed={sidebarCollapsed}
+        onCollapse={setSidebarCollapsed}
+      />
+
+      <main 
+        className={`flex-1 transition-all duration-300 ${
+          sidebarCollapsed ? 'md:ml-[72px]' : 'md:ml-[260px]'
+        } pb-20 md:pb-0 min-h-screen flex flex-col`}
+      >
+        <Header 
+          onSearchSelect={(id) => setSelectedStateId(id)}
+          onDownloadClick={() => setIsDownloadModalOpen(true)}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+          <AnimatePresence mode="wait">
+            {activeView === 'dashboard' && (
+              <motion.div 
+                key="dashboard"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                {/* Top section: Map + Progress */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Main Map Area */}
+                  <div className="lg:col-span-2 glass rounded-2xl border border-border/50 p-2 flex flex-col relative min-h-[500px]" id="india-map-capture">
+                    <div className="absolute top-4 left-4 z-10 glass px-4 py-3 rounded-xl border border-border/50 flex flex-col gap-3">
+                      <div>
+                        <h2 className="font-bold text-lg text-foreground">Interactive Map</h2>
+                        <p className="text-xs text-muted-foreground">Click on regions to mark them</p>
+                      </div>
+                      
+                      {/* Map Mode Toggle */}
+                      <div className="flex bg-muted/50 p-1 rounded-lg border border-border/50">
+                        <button
+                          onClick={() => useTravelStore.getState().setMapMode('visited')}
+                          className={`flex-1 text-xs font-medium px-3 py-1.5 rounded-md transition-colors ${mapMode === 'visited' ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                        >
+                          Visited
+                        </button>
+                        <button
+                          onClick={() => useTravelStore.getState().setMapMode('wishlist')}
+                          className={`flex-1 text-xs font-medium px-3 py-1.5 rounded-md transition-colors ${mapMode === 'wishlist' ? 'bg-background shadow text-purple-400' : 'text-muted-foreground hover:text-foreground'}`}
+                        >
+                          Wishlist
+                        </button>
+                      </div>
+
+                      {/* Map Filter */}
+                      <div className="flex bg-muted/50 p-1 rounded-lg border border-border/50 flex-wrap gap-1">
+                        {(['all', 'coastal', 'mountain', 'northeast'] as const).map(filter => (
+                          <button
+                            key={filter}
+                            onClick={() => useTravelStore.getState().setMapFilter(filter)}
+                            className={`flex-1 text-[10px] font-medium px-2 py-1 rounded-md transition-colors capitalize ${mapFilter === filter ? 'bg-background shadow text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                          >
+                            {filter}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <IndiaMap 
+                      className="flex-1 min-h-[500px]" 
+                      onStateClick={setSelectedStateId}
+                    />
+                  </div>
+
+                  {/* Right Column: Progress & Motivation */}
+                  <div className="space-y-6 flex flex-col">
+                    <ProgressRing />
+                    <div className="flex-1">
+                      <MotivationEngine />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Stats Panel underneath */}
+                <StatsPanel />
+                
+                {/* Achievements Panel */}
+                <Achievements />
+              </motion.div>
+            )}
+
+            {activeView === 'statistics' && (
+              <motion.div 
+                key="statistics"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-6"
+              >
+                <h2 className="text-3xl font-bold mb-6">Detailed Statistics</h2>
+                <StatsPanel />
+                <AnalyticsCharts />
+              </motion.div>
+            )}
+
+            {activeView === 'diary' && (
+              <motion.div 
+                key="diary"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold mb-2">Travel Diary</h2>
+                  <p className="text-muted-foreground">Your chronological journey across India.</p>
+                </div>
+                <Timeline />
+              </motion.div>
+            )}
+
+            {activeView === 'settings' && (
+              <motion.div 
+                key="settings"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold mb-2">Settings & Customization</h2>
+                  <p className="text-muted-foreground">Personalize your Bharat Explorer experience.</p>
+                </div>
+                <SettingsPanel />
+              </motion.div>
+            )}
+
+            {activeView === 'achievements' && (
+              <motion.div 
+                key="achievements"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold mb-2">Travel Achievements</h2>
+                  <p className="text-muted-foreground">Unlock badges by exploring different parts of India.</p>
+                </div>
+                <Achievements />
+              </motion.div>
+            )}
+
+
+
+            {activeView === 'downloads' && (
+              <motion.div 
+                key="downloads"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <h2 className="text-3xl font-bold mb-6">Downloads & Export</h2>
+                <div className="max-w-2xl">
+                  <p className="text-muted-foreground mb-6">
+                    Click the export button below to download your map as an image, PDF, or backup your JSON data.
+                  </p>
+                  <Button onClick={() => setIsDownloadModalOpen(true)} className="gradient-saffron text-white border-0">
+                    Open Export Menu
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </main>
+
+      {/* Modals & Drawers */}
+      <StateDetailDrawer 
+        stateId={selectedStateId} 
+        onClose={() => setSelectedStateId(null)} 
+      />
+      
+      <DownloadModal 
+        isOpen={isDownloadModalOpen}
+        onClose={() => setIsDownloadModalOpen(false)}
+      />
     </div>
   );
 }

@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌍 Bharat Explorer
 
-## Getting Started
+> An interactive, beautifully designed travel dashboard to track your journeys across the Incredible States and Union Territories of India.
 
-First, run the development server:
+![Bharat Explorer Cover](https://via.placeholder.com/1200x600/0a0a1a/FFFFFF?text=Bharat+Explorer)
 
+## ✨ Features
+
+- **Interactive SVG Map**: A complete, highly-accurate map of all 28 States and 8 Union Territories of India.
+- **Visual Progress**: Color-coded states to differentiate between places you've visited, and places on your wishlist.
+- **Travel Journal**: Add personal notes, dates, ratings, and travel companions for each state you visit.
+- **Stunning UI/UX**: Built with a modern glassmorphism aesthetic inspired by Apple, Stripe, and modern design trends. Smooth animations powered by Framer Motion.
+- **Cloud Sync**: Seamlessly syncs your travel map across devices using Google Sign-In and Firebase Cloud Firestore.
+- **Data Export**: Export your travel history as a JSON file for local backup.
+
+## 🚀 Tech Stack
+
+- **Framework**: Next.js 15 (React 19)
+- **Language**: TypeScript
+- **Styling**: TailwindCSS & shadcn/ui
+- **State Management**: Zustand
+- **Animations**: Framer Motion
+- **Backend & Auth**: Firebase (Google Auth, Cloud Firestore)
+- **Icons**: Lucide React
+
+## 💻 Running Locally
+
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/bharat-explorer.git
+cd bharat-explorer
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Setup Firebase
+By default, the project is configured to use a live Firebase backend for authentication. If you want to use your own Firebase project:
+1. Create a project in the [Firebase Console](https://console.firebase.google.com/)
+2. Enable Google Sign-In under **Authentication > Sign-in method**
+3. Create a **Cloud Firestore** database
+4. Update the config in `src/lib/firebase.ts`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Start the development server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-## Learn More
+## 🛡️ Firestore Security Rules
 
-To learn more about Next.js, take a look at the following resources:
+If setting up your own Firebase backend, deploy these rules to secure the database:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📜 License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License.
