@@ -48,13 +48,6 @@ export default function Header({ onSearchSelect, onDownloadClick }: HeaderProps)
               <UserIcon className="w-4 h-4 mr-2" />
               Edit Profile
             </Link>
-            <Link 
-              href="/settings"
-              className="flex items-center w-full justify-start text-sm h-8 px-2 rounded-lg hover:bg-muted hover:text-foreground dark:hover:bg-muted/50"
-            >
-              <SettingsIcon className="w-4 h-4 mr-2" />
-              Account Settings
-            </Link>
             <Button 
               variant="ghost" 
               className="w-full justify-start text-sm h-8 px-2 text-red-500 hover:text-red-600 hover:bg-red-500/10 mt-1" 
