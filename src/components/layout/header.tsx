@@ -1,6 +1,6 @@
 'use client';
 
-import { Moon, Sun, Monitor, Download } from 'lucide-react';
+import { Moon, Sun, Monitor, Download, Map } from 'lucide-react';
 import { useTravelStore } from '@/store/travel-store';
 import SearchComponent from '@/components/dashboard/search';
 import { Button } from '@/components/ui/button';
