@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-export type SidebarView = 'dashboard' | 'statistics' | 'diary' | 'achievements' | 'settings' | 'downloads' | 'about';
+export type SidebarView = 'dashboard' | 'statistics' | 'diary' | 'achievements' | 'ai-guide' | 'settings' | 'downloads' | 'about';
 
 interface SidebarProps {
   activeView: SidebarView;
@@ -38,6 +38,7 @@ const navItems: { id: SidebarView; label: string; icon: React.ElementType; badge
   { id: 'statistics', label: 'Statistics', icon: BarChart3 },
   { id: 'diary', label: 'Travel Diary', icon: BookOpen },
   { id: 'achievements', label: 'Achievements', icon: Trophy },
+  { id: 'ai-guide', label: 'AI Guide', icon: Sparkles },
   { id: 'settings', label: 'Settings', icon: Settings },
   { id: 'downloads', label: 'Downloads', icon: Download },
   { id: 'about', label: 'About India', icon: Info },

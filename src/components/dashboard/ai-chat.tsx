@@ -1,0 +1,281 @@
+'use client';
+
+import { useRef, useState, useEffect } from 'react';
+import { useChat } from '@ai-sdk/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Send, Mic, MicOff, ImageIcon, Bot, User, Loader2, Paperclip, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+// Global types for Speech Recognition
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
+export default function AIChatbot() {
+  const { messages, sendMessage, status } = useChat({
+    onError: (error) => {
+      console.error('Chat Error:', error);
+      alert('Error connecting to AI. Please ensure you have added the GOOGLE_GENERATIVE_AI_API_KEY environment variable in Vercel.');
+    }
+  });
+
+  const isLoading = status === 'submitted' || status === 'streaming';
+
+  const [input, setInput] = useState('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+
+  // Initialize Speech Recognition
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const rec = new SpeechRecognition();
+        rec.continuous = false;
+        rec.interimResults = true;
+        rec.lang = 'en-IN'; // Indian English
+        
+        rec.onresult = (event: any) => {
+          let transcript = '';
+          for (let i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+          }
+          setInput(transcript);
+        };
+        
+        rec.onend = () => {
+          setIsListening(false);
+        };
+        
+        setRecognition(rec);
+      }
+    }
+  }, [setInput]);
+
+  // Auto-scroll
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  const toggleListening = () => {
+    if (!recognition) {
+      alert('Speech recognition is not supported in this browser.');
+      return;
+    }
+    
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      recognition.start();
+      setIsListening(true);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File is too large. Please select an image under 5MB.');
+        return;
+      }
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeFile = () => {
+    setSelectedFile(null);
+    setFilePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const onCustomSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() && !selectedFile) return;
+
+    if (isListening && recognition) {
+      recognition.stop();
+      setIsListening(false);
+    }
+
+    if (selectedFile) {
+      sendMessage({
+        text: input || 'Analyze this image',
+        files: fileInputRef.current?.files ? fileInputRef.current.files : undefined
+      });
+      removeFile();
+      setInput('');
+    } else {
+      sendMessage({ text: input });
+      setInput('');
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-[calc(100vh-140px)] md:h-[calc(100vh-100px)] glass rounded-2xl border border-border/50 overflow-hidden relative">
+      {/* Header */}
+      <div className="p-4 border-b border-border/50 bg-background/50 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full gradient-saffron flex items-center justify-center">
+          <Bot className="w-5 h-5 text-white" />
+        </div>
+        <div>
+          <h2 className="font-bold text-lg text-foreground">Bharat AI Guide</h2>
+          <p className="text-xs text-muted-foreground">Ask anything about traveling in India</p>
+        </div>
+      </div>
+
+      {/* Chat Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        {messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-70">
+            <Bot className="w-16 h-16 text-muted-foreground" />
+            <div>
+              <p className="font-medium text-lg">How can I help you explore India?</p>
+              <p className="text-sm text-muted-foreground max-w-xs mx-auto mt-2">
+                Try asking about a state, a monument, or upload a photo to identify it!
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2 mt-4 max-w-md">
+              <span className="text-xs bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">"Best time to visit Kerala?"</span>
+              <span className="text-xs bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">"Plan a 3-day trip to Jaipur"</span>
+              <span className="text-xs bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">"What is the capital of Sikkim?"</span>
+            </div>
+          </div>
+        )}
+
+        {messages.map((m) => (
+          <div key={m.id} className={`flex gap-3 ${m.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${m.role === 'user' ? 'bg-primary/20 text-primary' : 'gradient-saffron text-white'}`}>
+              {m.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+            </div>
+            
+            <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+              m.role === 'user' 
+                ? 'bg-primary text-primary-foreground rounded-tr-sm' 
+                : 'bg-muted/50 border border-border/50 text-foreground rounded-tl-sm'
+            }`}>
+              <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                {m.parts?.map((p, i) => p.type === 'text' ? p.text : '').join('')}
+              </div>
+            </div>
+          </div>
+        ))}
+        
+        {isLoading && messages.length > 0 && messages[messages.length - 1].role === 'user' && (
+          <div className="flex gap-3 flex-row">
+            <div className="w-8 h-8 rounded-full gradient-saffron text-white flex items-center justify-center flex-shrink-0">
+              <Bot className="w-4 h-4" />
+            </div>
+            <div className="bg-muted/50 border border-border/50 rounded-2xl rounded-tl-sm px-4 py-3">
+              <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input Area */}
+      <div className="p-3 border-t border-border/50 bg-background/50">
+        {/* File Preview */}
+        <AnimatePresence>
+          {filePreview && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: 'auto' }}
+              exit={{ opacity: 0, y: 10, height: 0 }}
+              className="mb-3 relative inline-block"
+            >
+              <img src={filePreview} alt="Upload preview" className="h-16 w-16 object-cover rounded-lg border border-border" />
+              <button 
+                onClick={removeFile}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 shadow-sm"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <form onSubmit={onCustomSubmit} className="flex items-end gap-2">
+          {/* Hidden File Input */}
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileChange} 
+            accept="image/*" 
+            className="hidden" 
+          />
+
+          <Button 
+            type="button" 
+            variant="ghost" 
+            size="icon" 
+            className="flex-shrink-0 rounded-full hover:bg-muted/50 h-10 w-10"
+            onClick={() => fileInputRef.current?.click()}
+            title="Upload Image"
+          >
+            <ImageIcon className="w-5 h-5 text-muted-foreground" />
+          </Button>
+
+          <Button 
+            type="button" 
+            variant="ghost" 
+            size="icon" 
+            className={`flex-shrink-0 rounded-full h-10 w-10 ${isListening ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-600' : 'hover:bg-muted/50 text-muted-foreground'}`}
+            onClick={toggleListening}
+            title={isListening ? 'Stop listening' : 'Start voice input'}
+          >
+            {isListening ? (
+              <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                <Mic className="w-5 h-5" />
+              </motion.div>
+            ) : (
+              <Mic className="w-5 h-5" />
+            )}
+          </Button>
+
+          <Input
+            value={input}
+            onChange={handleInputChange}
+            placeholder={isListening ? "Listening..." : "Ask about a place, culture, or upload a photo..."}
+            className="flex-1 rounded-full bg-muted/50 border-border/50 h-10 px-4 focus-visible:ring-1"
+            disabled={isLoading}
+          />
+
+          <Button 
+            type="submit" 
+            size="icon" 
+            className="flex-shrink-0 rounded-full h-10 w-10 gradient-saffron border-0 shadow-sm"
+            disabled={(!input.trim() && !selectedFile) || isLoading}
+          >
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+}

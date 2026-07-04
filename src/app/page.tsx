@@ -15,6 +15,7 @@ import Timeline from '@/components/dashboard/timeline';
 import StateDetailDrawer from '@/components/map/state-detail-drawer';
 import DownloadModal from '@/components/export/download-modal';
 import SettingsPanel from '@/components/dashboard/settings-panel';
+import AIChatbot from '@/components/dashboard/ai-chat';
 import { motion, AnimatePresence } from 'motion/react';
 import { RefreshCw, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
