@@ -140,7 +140,7 @@ export default function AIChatbot() {
     return (
       <Button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-24 md:bottom-6 right-4 md:right-6 h-14 w-14 rounded-full gradient-saffron shadow-xl z-50 p-0 flex items-center justify-center hover:shadow-2xl transition-all hover:scale-105 border border-white/20"
+        className="fixed bottom-28 md:bottom-6 right-4 md:right-6 h-14 w-14 rounded-full gradient-saffron shadow-xl z-[60] p-0 flex items-center justify-center hover:shadow-2xl transition-all hover:scale-105 border border-white/20"
       >
         <Bot className="w-6 h-6 text-white" />
       </Button>
@@ -153,10 +153,10 @@ export default function AIChatbot() {
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-        className="fixed bottom-24 md:bottom-6 right-4 md:right-6 w-[calc(100vw-32px)] md:w-[350px] lg:w-[400px] h-[600px] max-h-[75vh] md:max-h-[85vh] z-50 flex flex-col shadow-2xl bg-background rounded-2xl border border-border/50 overflow-hidden"
+        className="fixed bottom-28 md:bottom-6 right-4 md:right-6 w-[calc(100vw-32px)] md:w-[350px] lg:w-[400px] h-[600px] max-h-[75vh] md:max-h-[85vh] z-[60] flex flex-col shadow-2xl bg-white dark:bg-[#0c0c14] opacity-100 rounded-2xl border border-border/50 overflow-hidden"
       >
         {/* Header */}
-        <div className="p-4 border-b border-border/50 bg-background/50 flex items-center justify-between">
+        <div className="p-4 border-b border-border/50 bg-muted/30 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full gradient-saffron flex items-center justify-center shadow-sm">
               <Bot className="w-5 h-5 text-white" />
@@ -222,7 +222,7 @@ export default function AIChatbot() {
       </div>
 
       {/* Input Area */}
-      <div className="p-3 border-t border-border/50 bg-background/50">
+      <div className="p-3 border-t border-border/50 bg-muted/30">
         {/* File Preview */}
         <AnimatePresence>
           {filePreview && (
