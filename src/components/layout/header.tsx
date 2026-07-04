@@ -31,6 +31,16 @@ export default function Header({ onSearchSelect, onDownloadClick }: HeaderProps)
             variant="outline"
             size="icon"
             className="glass border-border/50 rounded-full w-8 h-8"
+            onClick={onDownloadClick}
+          >
+            <Download className="w-4 h-4" />
+            <span className="sr-only">Export Map</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon"
+            className="glass border-border/50 rounded-full w-8 h-8"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           >
             {theme === 'dark' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
