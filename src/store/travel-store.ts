@@ -35,6 +35,10 @@ export interface UserProfile {
   uid?: string;
   email?: string | null;
   photoURL?: string | null;
+  dob?: string;
+  phone?: string;
+  address?: string;
+  bio?: string;
 }
 
 export interface TravelStore {
@@ -58,6 +62,7 @@ export interface TravelStore {
   // User Actions
   login: (name: string, avatar: string, uid?: string, email?: string | null, photoURL?: string | null) => void;
   logout: () => void;
+  updateProfile: (profile: Partial<UserProfile>) => void;
   syncFromCloud: (data: any) => void;
 
   // Actions
@@ -151,7 +156,7 @@ function serialize(state: TravelStore): SerializedState {
   };
 }
 
-function deserialize(raw: SerializedState): Omit<TravelStore, 'login' | 'logout' | 'syncFromCloud' | 'toggleVisited' | 'toggleWishlist' | 'setTravelNote' | 'setMapMode' | 'setMapFilter' | 'setMapColor' | 'setTheme' | 'setShowLabels' | 'setShowBorders' | 'setAnimationsEnabled' | 'resetAll' | 'exportData' | 'importData'> {
+function deserialize(raw: SerializedState): Omit<TravelStore, 'login' | 'logout' | 'updateProfile' | 'syncFromCloud' | 'toggleVisited' | 'toggleWishlist' | 'setTravelNote' | 'setMapMode' | 'setMapFilter' | 'setMapColor' | 'setTheme' | 'setShowLabels' | 'setShowBorders' | 'setAnimationsEnabled' | 'resetAll' | 'exportData' | 'importData'> {
   const mapColors = { ...DEFAULT_MAP_COLORS, ...(raw.mapColors ?? {}) };
   
   // Patch old dark colors to the new lighter ones for users with existing saves
@@ -217,6 +222,16 @@ export const useTravelStore = create<TravelStore>()(
       // ---- user actions ----
       login: (name, avatar, uid, email, photoURL) => set({ user: { name, avatar, uid, email, photoURL } }),
       logout: () => set({ user: null }),
+      updateProfile: (profileUpdates) => set((state) => {
+        if (!state.user) return state;
+        const nextUser = { ...state.user, ...profileUpdates };
+        if (nextUser.uid) {
+          setDoc(doc(db, 'users', nextUser.uid), {
+            user: nextUser
+          }, { merge: true });
+        }
+        return { user: nextUser };
+      }),
       syncFromCloud: (data) => set((state) => ({
         visitedStates: new Set(data.visitedStates || []),
         wishlistStates: new Set(data.wishlistStates || []),

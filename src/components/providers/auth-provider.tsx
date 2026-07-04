@@ -31,7 +31,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setDoc(docRef, {
               visitedStates: Array.from(state.visitedStates),
               wishlistStates: Array.from(state.wishlistStates),
-              travelNotes: state.travelNotes
+              travelNotes: state.travelNotes,
+              user: state.user
             }, { merge: true });
           }
           setIsLoading(false);
