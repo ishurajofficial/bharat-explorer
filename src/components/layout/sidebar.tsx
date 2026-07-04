@@ -149,56 +149,6 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onCollaps
           </AnimatePresence>
         </div>
 
-        {/* User Profile */}
-        {user && (
-          <div className="p-4 border-t border-border/30">
-            <AnimatePresence>
-              {!collapsed ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-2 overflow-hidden">
-                    <div className="w-8 h-8 rounded-full bg-background border border-border/50 flex items-center justify-center text-lg flex-shrink-0">
-                      {user.avatar}
-                    </div>
-                    <div className="overflow-hidden">
-                      <p className="text-sm font-semibold truncate text-foreground">{user.name}</p>
-                      <p className="text-[10px] text-muted-foreground truncate">Explorer</p>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => logout()}
-                    className="p-1.5 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-md transition-colors"
-                    title="Log out"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </motion.div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex flex-col items-center gap-2"
-                >
-                  <div className="w-8 h-8 rounded-full bg-background border border-border/50 flex items-center justify-center text-lg" title={user.name}>
-                    {user.avatar}
-                  </div>
-                  <button 
-                    onClick={() => logout()}
-                    className="p-1.5 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-md transition-colors"
-                    title="Log out"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
 
         {/* Footer info */}
         <div className="p-3 border-t border-border/30 text-center">
