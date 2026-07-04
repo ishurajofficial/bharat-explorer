@@ -251,6 +251,8 @@ export default function DashboardPage() {
         isOpen={isDownloadModalOpen}
         onClose={() => setIsDownloadModalOpen(false)}
       />
+
+      <AIChatbot />
     </div>
   );
 }
