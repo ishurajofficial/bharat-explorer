@@ -22,7 +22,7 @@ export default function Header({ onSearchSelect, onDownloadClick }: HeaderProps)
             <Map className="w-4 h-4 text-white" />
           </div>
           <h1 className="text-base font-bold bg-gradient-to-r from-[var(--saffron)] to-[var(--india-green)] bg-clip-text text-transparent">
-            Bharat
+            Bharat Explorer
           </h1>
         </div>
         
