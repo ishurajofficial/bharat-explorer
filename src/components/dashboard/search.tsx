@@ -41,8 +41,10 @@ export default function SearchComponent({ onSelect }: SearchProps) {
 
   return (
     <div className="relative w-full max-w-sm" ref={containerRef}>
-      <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <div className="relative flex items-center">
+        <div className="absolute left-1.5 w-7 h-7 rounded-full gradient-saffron flex items-center justify-center shadow-sm">
+          <MapPin className="w-3.5 h-3.5 text-white" />
+        </div>
         <Input
           placeholder="Search states, capitals..."
           value={query}
@@ -51,8 +53,9 @@ export default function SearchComponent({ onSelect }: SearchProps) {
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          className="pl-9 bg-background/50 border-border/50 focus-visible:ring-primary rounded-full h-10"
+          className="pl-11 bg-background/50 border-border/50 focus-visible:ring-primary rounded-full h-10"
         />
+        <SearchIcon className="absolute right-3 w-4 h-4 text-muted-foreground pointer-events-none" />
       </div>
 
       <AnimatePresence>
