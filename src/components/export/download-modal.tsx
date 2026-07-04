@@ -24,15 +24,17 @@ export default function DownloadModal({ isOpen, onClose, mapElementId = 'india-m
       const element = document.getElementById(mapElementId);
       if (!element) throw new Error('Map element not found');
 
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(element, {
-        backgroundColor: null, // Let it use the element's actual background
-        scale: 2, // High resolution
-        logging: true,
-        useCORS: true,
-      });
+      const htmlToImage = await import('html-to-image');
+      
+      const config = {
+        pixelRatio: 2, // High resolution
+        backgroundColor: 'rgba(0,0,0,0)', // Transparent
+      };
 
-      const url = canvas.toDataURL(`image/${type}`, 1.0);
+      const url = type === 'png' 
+        ? await htmlToImage.toPng(element, config)
+        : await htmlToImage.toJpeg(element, { ...config, backgroundColor: '#0a0f1c' }); // JPEG needs a solid bg
+
       const a = document.createElement('a');
       a.href = url;
       a.download = `bharat-explorer-map.${type}`;
@@ -53,24 +55,23 @@ export default function DownloadModal({ isOpen, onClose, mapElementId = 'india-m
       const element = document.getElementById(mapElementId);
       if (!element) throw new Error('Map element not found');
 
-      const html2canvas = (await import('html2canvas')).default;
+      const htmlToImage = await import('html-to-image');
       const { jsPDF } = await import('jspdf');
       
-      const canvas = await html2canvas(element, {
-        backgroundColor: null,
-        scale: 2,
-        logging: true,
-        useCORS: true,
+      const imgData = await htmlToImage.toJpeg(element, {
+        pixelRatio: 2,
+        backgroundColor: '#0a0f1c', // Solid dark bg for PDF map
       });
 
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      // We need to measure the actual element to get aspect ratio correct in PDF
+      const rect = element.getBoundingClientRect();
       const pdf = new jsPDF({
         orientation: 'landscape',
         unit: 'px',
-        format: [canvas.width, canvas.height]
+        format: [rect.width, rect.height]
       });
 
-      pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+      pdf.addImage(imgData, 'JPEG', 0, 0, rect.width, rect.height);
       pdf.save('bharat-explorer-map.pdf');
       toast.success('PDF Download complete!', { id: loadingToast });
     } catch (err: any) {
