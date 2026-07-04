@@ -1,5 +1,5 @@
 import { google } from '@ai-sdk/google';
-import { streamText } from 'ai';
+import { streamText, convertToModelMessages } from 'ai';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       model: google('gemini-2.5-flash'),
       system: `You are Bharat Explorer AI, an enthusiastic, culturally aware expert guide for Indian geography and travel. You help users plan trips, identify locations from images, give facts about states and monuments, and suggest the best times to visit various regions of India.
 Keep your responses concise, well-formatted, and visually appealing using markdown. If asked something unrelated to travel, geography, or India, gently steer the conversation back to exploring India.`,
-      messages,
+      messages: await convertToModelMessages(messages),
     });
 
     return result.toUIMessageStreamResponse();
