@@ -21,9 +21,22 @@ export default function AIChatbot() {
   const setChatLanguage = useTravelStore((state) => state.setChatLanguage);
 
   const { messages, sendMessage, status } = useChat({
+    onResponse: async (response) => {
+      if (!response.ok) {
+        try {
+          const text = await response.clone().text();
+          alert(`Server Error (${response.status}): ${text}`);
+        } catch (e) {
+          console.error("Failed to read error response", e);
+        }
+      }
+    },
     onError: (error) => {
       console.error('Chat Error:', error);
-      alert(`AI Connection Error: ${error?.message || error}\\n\\nPlease ensure you have added a valid GOOGLE_GENERATIVE_AI_API_KEY environment variable in Vercel.`);
+      // Fallback if onResponse doesn't catch it
+      if (error?.message !== 'An error occurred.') {
+        alert(`AI Connection Error: ${error?.message || error}\\n\\nPlease ensure you have added a valid GOOGLE_GENERATIVE_AI_API_KEY environment variable in Vercel.`);
+      }
     }
   });
 
