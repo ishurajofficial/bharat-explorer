@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Send, Mic, MicOff, ImageIcon, Bot, User, Loader2, Paperclip, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTravelStore } from '@/store/travel-store';
 
 // Global types for Speech Recognition
 declare global {
@@ -16,6 +17,9 @@ declare global {
 }
 
 export default function AIChatbot() {
+  const chatLanguage = useTravelStore((state) => state.chatLanguage);
+  const setChatLanguage = useTravelStore((state) => state.setChatLanguage);
+
   const { messages, sendMessage, status } = useChat({
     onError: (error) => {
       console.error('Chat Error:', error);
@@ -123,15 +127,17 @@ export default function AIChatbot() {
       setIsListening(false);
     }
 
+    const languagePrompt = chatLanguage !== 'English' ? ` (Please respond in ${chatLanguage})` : '';
+
     if (selectedFile) {
       sendMessage({
-        text: input || 'Analyze this image',
+        text: (input || 'Analyze this image') + languagePrompt,
         files: fileInputRef.current?.files ? fileInputRef.current.files : undefined
       });
       removeFile();
       setInput('');
     } else {
-      sendMessage({ text: input });
+      sendMessage({ text: input + languagePrompt });
       setInput('');
     }
   };
@@ -166,9 +172,26 @@ export default function AIChatbot() {
               <p className="text-xs text-muted-foreground">Ask anything about traveling in India</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="rounded-full hover:bg-muted/50">
-            <X className="w-5 h-5 text-muted-foreground" />
-          </Button>
+          
+          <div className="flex items-center gap-2">
+            <select
+              value={chatLanguage}
+              onChange={(e) => setChatLanguage(e.target.value)}
+              className="bg-transparent border border-border/50 text-xs rounded-md px-2 py-1 outline-none text-foreground bg-background focus:ring-1 focus:ring-primary"
+            >
+              <option value="English">English</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Tamil">Tamil</option>
+              <option value="Telugu">Telugu</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Urdu">Urdu</option>
+            </select>
+            <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="rounded-full hover:bg-muted/50 h-8 w-8">
+              <X className="w-4 h-4 text-muted-foreground" />
+            </Button>
+          </div>
         </div>
 
       {/* Chat Messages */}
@@ -202,7 +225,13 @@ export default function AIChatbot() {
                 : 'bg-muted/50 border border-border/50 text-foreground rounded-tl-sm'
             }`}>
               <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                {m.parts?.map((p, i) => p.type === 'text' ? p.text : '').join('')}
+                {m.parts?.map((p, i) => {
+                  if (p.type === 'text') {
+                    // Strip the hidden language instruction from the user's message in the UI
+                    return m.role === 'user' ? p.text.replace(/ \(Please respond in .*\)$/, '') : p.text;
+                  }
+                  return '';
+                }).join('')}
               </div>
             </div>
           </div>

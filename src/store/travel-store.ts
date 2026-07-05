@@ -58,6 +58,7 @@ export interface TravelStore {
   showLabels: boolean;
   showBorders: boolean;
   animationsEnabled: boolean;
+  chatLanguage: string;
 
   // User Actions
   login: (name: string, avatar: string, uid?: string, email?: string | null, photoURL?: string | null) => void;
@@ -76,6 +77,7 @@ export interface TravelStore {
   setShowLabels: (show: boolean) => void;
   setShowBorders: (show: boolean) => void;
   setAnimationsEnabled: (enabled: boolean) => void;
+  setChatLanguage: (language: string) => void;
   resetAll: () => void;
   exportData: () => string;
   importData: (json: string) => void;
@@ -108,6 +110,7 @@ const DEFAULT_STATE: Pick<
   | 'showLabels'
   | 'showBorders'
   | 'animationsEnabled'
+  | 'chatLanguage'
 > = {
   user: null,
   visitedStates: new Set<string>(),
@@ -120,6 +123,7 @@ const DEFAULT_STATE: Pick<
   showLabels: true,
   showBorders: true,
   animationsEnabled: true,
+  chatLanguage: 'English',
 };
 
 // ---------------------------------------------------------------------------
@@ -138,6 +142,7 @@ interface SerializedState {
   showLabels: boolean;
   showBorders: boolean;
   animationsEnabled: boolean;
+  chatLanguage?: string;
 }
 
 function serialize(state: TravelStore): SerializedState {
@@ -153,10 +158,11 @@ function serialize(state: TravelStore): SerializedState {
     showLabels: state.showLabels,
     showBorders: state.showBorders,
     animationsEnabled: state.animationsEnabled,
+    chatLanguage: state.chatLanguage,
   };
 }
 
-function deserialize(raw: SerializedState): Omit<TravelStore, 'login' | 'logout' | 'updateProfile' | 'syncFromCloud' | 'toggleVisited' | 'toggleWishlist' | 'setTravelNote' | 'setMapMode' | 'setMapFilter' | 'setMapColor' | 'setTheme' | 'setShowLabels' | 'setShowBorders' | 'setAnimationsEnabled' | 'resetAll' | 'exportData' | 'importData'> {
+function deserialize(raw: SerializedState): Omit<TravelStore, 'login' | 'logout' | 'updateProfile' | 'syncFromCloud' | 'toggleVisited' | 'toggleWishlist' | 'setTravelNote' | 'setMapMode' | 'setMapFilter' | 'setMapColor' | 'setTheme' | 'setShowLabels' | 'setShowBorders' | 'setAnimationsEnabled' | 'setChatLanguage' | 'resetAll' | 'exportData' | 'importData'> {
   const mapColors = { ...DEFAULT_MAP_COLORS, ...(raw.mapColors ?? {}) };
   
   // Patch old dark colors to the new lighter ones for users with existing saves
@@ -176,6 +182,7 @@ function deserialize(raw: SerializedState): Omit<TravelStore, 'login' | 'logout'
     showLabels: raw.showLabels ?? true,
     showBorders: raw.showBorders ?? true,
     animationsEnabled: raw.animationsEnabled ?? true,
+    chatLanguage: raw.chatLanguage ?? 'English',
   };
 }
 
@@ -308,6 +315,8 @@ export const useTravelStore = create<TravelStore>()(
 
       setAnimationsEnabled: (enabled: boolean) => set({ animationsEnabled: enabled }),
 
+      setChatLanguage: (language: string) => set({ chatLanguage: language }),
+
       resetAll: () =>
         set({
           user: null,
@@ -319,6 +328,7 @@ export const useTravelStore = create<TravelStore>()(
           showLabels: true,
           showBorders: true,
           animationsEnabled: true,
+          chatLanguage: 'English',
         }),
 
       exportData: (): string => {
