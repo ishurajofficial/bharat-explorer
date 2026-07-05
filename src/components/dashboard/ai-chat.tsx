@@ -180,12 +180,28 @@ export default function AIChatbot() {
               className="bg-transparent border border-border/50 text-xs rounded-md px-2 py-1 outline-none text-foreground bg-background focus:ring-1 focus:ring-primary"
             >
               <option value="English">English</option>
+              <option value="Assamese">Assamese</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Bhojpuri">Bhojpuri</option>
+              <option value="Bodo">Bodo</option>
+              <option value="Dogri">Dogri</option>
+              <option value="Gujarati">Gujarati</option>
               <option value="Hindi">Hindi</option>
+              <option value="Kannada">Kannada</option>
+              <option value="Kashmiri">Kashmiri</option>
+              <option value="Konkani">Konkani</option>
+              <option value="Maithili">Maithili</option>
+              <option value="Malayalam">Malayalam</option>
+              <option value="Manipuri">Manipuri</option>
+              <option value="Marathi">Marathi</option>
+              <option value="Nepali">Nepali</option>
+              <option value="Odia">Odia</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="Sanskrit">Sanskrit</option>
+              <option value="Santali">Santali</option>
+              <option value="Sindhi">Sindhi</option>
               <option value="Tamil">Tamil</option>
               <option value="Telugu">Telugu</option>
-              <option value="Bengali">Bengali</option>
-              <option value="Marathi">Marathi</option>
-              <option value="Gujarati">Gujarati</option>
               <option value="Urdu">Urdu</option>
             </select>
             <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="rounded-full hover:bg-muted/50 h-8 w-8">
