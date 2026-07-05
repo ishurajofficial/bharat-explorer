@@ -16,9 +16,13 @@ Keep your responses concise, well-formatted, and visually appealing using markdo
     });
 
     return result.toUIMessageStreamResponse();
-  } catch (error) {
+  } catch (error: any) {
     console.error('AI Chat Error:', error);
-    return new Response(JSON.stringify({ error: 'Failed to generate response' }), {
+    
+    // Attempt to extract more specific error message from the AI SDK error
+    const errorMessage = error?.message || (error as Error).toString() || 'Failed to generate response';
+    
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

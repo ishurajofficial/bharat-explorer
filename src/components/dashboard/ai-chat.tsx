@@ -23,7 +23,7 @@ export default function AIChatbot() {
   const { messages, sendMessage, status } = useChat({
     onError: (error) => {
       console.error('Chat Error:', error);
-      alert('Error connecting to AI. Please ensure you have added the GOOGLE_GENERATIVE_AI_API_KEY environment variable in Vercel.');
+      alert(`AI Connection Error: ${error?.message || error}\\n\\nPlease ensure you have added a valid GOOGLE_GENERATIVE_AI_API_KEY environment variable in Vercel.`);
     }
   });
 
